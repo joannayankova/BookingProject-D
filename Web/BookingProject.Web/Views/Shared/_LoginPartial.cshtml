@@ -1,0 +1,41 @@
+﻿@using BookingProject.Common
+@using BookingProject.Data.Models
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+<ul class="navbar-nav">
+   @if (this.SignInManager.IsSignedIn(this.User))
+   {
+    <li class="add-button">
+        <a class="btn btn-secondary" role="button" aria-pressed="true" asp-area="" asp-controller="Places" asp-action="Create">
+            <i class="fa fa-plus-circle" aria-hidden="true"></i> Добави място
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">
+            <i class="fa fa-user fa-fw"></i> Моят профил
+        </a>        
+    </li>
+        if (this.User.IsInRole(GlobalConstants.AdministratorRoleName))
+        {
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="Administration" asp-controller="Dashboard" asp-action="Index" title="Admin">Admin</a>
+        </li> 
+        }
+        <li class="nav-item">
+            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@(this.Url.Action("Index", "Home", new { area = string.Empty }))">
+                <button type="submit" class="nav-link btn btn-link text-dark"><i class="fa fa-sign-out"></i> Logout</button>
+            </form>
+        </li> 
+    }
+    else
+    {
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Регистрация</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Вход</a>
+        </li>
+    }
+</ul>

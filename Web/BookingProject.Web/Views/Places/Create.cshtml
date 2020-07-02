@@ -1,0 +1,155 @@
+﻿@model BookingProject.Web.ViewModels.Places.CreatePlaceInputModel
+@{ this.ViewData["Title"] = "Създаване на ново място";
+    var categories = Model.Categories.Select(x => new SelectListItem(x.Name, x.Id.ToString()));
+    var cities = Model.Cities.Select(x => new SelectListItem(x.Name, x.Id.ToString())); }
+
+<h1>@this.ViewData["Title"]</h1>
+
+
+<form method="post" asp-action="Create" enctype="multipart/form-data" class="row" id="uploadForm">
+    <div class="form-group col-6">
+        <label asp-for="Name">Име</label>
+        <input asp-for="Name" type="text" class="form-control" placeholder="Въведете име" value="Test" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="form-group col-6">
+        <label asp-for="CategoryId">Категория</label>
+        <select asp-for="CategoryId" asp-items="categories" class="form-control">
+            <option disabled selected value=""> -- изберете опция -- </option>
+        </select>
+        <span asp-validation-for="CategoryId" class="text-danger"></span>
+    </div>
+    <div class="form-group col-6">
+        <label asp-for="CityId">Град</label>
+        <select asp-for="CityId" asp-items="cities" class="form-control" placeholder="Изберете град">
+            <option disabled selected value=""> -- изберете опция -- </option>
+        </select>
+        <span asp-validation-for="CityId" class="text-danger"></span>
+    </div>
+    <div class="form-group col-6" style="height: 2em">
+        <label asp-for="Address">Адрес</label>
+        <textarea asp-for="Address" type="text" class="form-control" placeholder="Въведете адрес" value="Test"></textarea>
+        <span asp-validation-for="Address" class="text-danger"></span>
+    </div>
+    <div class="form-group col-6" style="height: 2em">
+        <label asp-for="Description">Описание на помещението</label>
+        <textarea asp-for="Description" type="text" class="form-control" placeholder="Въведете oписание" value="Test"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+    <div class="form-group col-6">
+        <label asp-for="PriceByNight">Цена за нощувка</label>
+        <input asp-for="PriceByNight" type="number" class="form-control" id="PricePerNight" value=5 placeholder="Въведете цена за нощувка">
+        <span asp-validation-for="PriceByNight" class="text-danger"></span>
+    </div>
+    <div class="form-group col-6">
+        <label asp-for="BedroomsNum">Брой спални стаи</label>
+        <input asp-for="BedroomsNum" type="number" class="form-control" id="BedroomsNum" value=5 placeholder="Въведете брой спални стаи">
+        <span asp-validation-for="BedroomsNum" class="text-danger"></span>
+    </div>
+    <div class="form-group col-6">
+        <label asp-for="BedsNum">Брой легла</label>
+        <input asp-for="BedsNum" type="number" class="form-control" id="BedsNum" value=5 placeholder="Въведете общ брой легла">
+        <span asp-validation-for="BedsNum" class="text-danger"></span>
+    </div>
+
+    <div class="form-group col-6">
+        <label asp-for="BathroomsNum">Брой бани</label>
+        <input asp-for="BathroomsNum" type="number" class="form-control" id="BathroomsNum" value=5 placeholder="Въведете брой бани">
+        <span asp-validation-for="BathroomsNum" class="text-danger"></span>
+    </div>
+    <div class="form-group col-6">
+        <label asp-for="MaxGuest">Максимум гости</label>
+        <input asp-for="MaxGuest" type="number" class="form-control" id="MaxGuest" value=5 placeholder="Въведете максимален брой гости/вкл. деца/">
+        <span asp-validation-for="MaxGuest" class="text-danger"></span>
+    </div>
+    <div class="col-12 row">
+        <h3 class="col-12 text-center m-3">Екстри:</h3>
+        @for (int i = 0; i < Model.Extras.Count; i++)
+        {
+<div class="form-group form-check col-2">
+    <input type="checkbox" asp-for="@Model.Extras[i].IsSelected" />
+    <label asp-for="@Model.Extras[i].IsSelected">@Model.Extras[i].Name</label>
+    <input type="hidden" asp-for="@Model.Extras[i].Id" />
+    <input type="hidden" asp-for="@Model.Extras[i].Name" />
+</div>}
+    </div>
+    <div class="col-12 row">
+        <h3 class="col-12 text-center m-3">Правила:</h3>
+        <div class="form-group form-check col-6 text-center">
+            <label class="switch">
+                <input asp-for="Pets" type="checkbox">
+                <span class="slider round"></span>
+            </label>
+            <span>Домашни любимци</span>
+        </div>
+        <div class="form-group form-check col-6 text-center">
+            <label class="switch">
+                <input asp-for="Smoking" type="checkbox">
+                <span class="slider round"></span>
+            </label>
+            <span>Пушене</span>
+        </div>
+    </div>
+    <div class="col-12">
+        <h3 class="col-md-4 text-center m-3">Качване на снимки:</h3>
+        <div class="col-md-3" id='filecontainer'>
+            <span class="btn btn-default btn-file col-12 text-center m-3">
+                <i class="far fa-file-image fa-2x"></i><label for="imageInput"> Избери файлове</label>
+            </span>
+            <input asp-for="Images" type="file" class="custom-file-input" id="imageInput" multiple />            
+        </div>
+    </div>
+    <div class="col-12">
+        <input type="submit" value="Създай" class="btn btn-secondary col-4" style="margin-left: 27rem">
+    </div>
+</form>
+
+@section scripts{
+    <script type="text/javascript">
+        //var inputLocalFont = document.getElementById("imageInput");
+        //inputLocalFont.addEventListener("change", previewImages, false);
+
+        //function previewImages() {
+        //    var fileList = this.files;
+
+        //    var anyWindow = window.URL || window.webkitURL;
+
+        //    for (var i = 0; i < fileList.length; i++) {
+        //        var objectUrl = anyWindow.createObjectURL(fileList[i]);
+        //        $('.preview-area').append('<img src="' + objectUrl + '" width="270px" height="180px" padding:"10px" />');
+        //        window.URL.revokeObjectURL(fileList[i]);
+        //    }
+
+        //}
+
+        $(document).ready(function () {
+            if (window.File && window.FileList && window.FileReader) {
+                $("#imageInput").on("change", function (e) {
+                    var files = e.target.files,
+                        filesLength = files.length;
+                    for (var i = 0; i < filesLength; i++) {
+                        var f = files[i]
+                        var fileReader = new FileReader();
+                        fileReader.onload = (function (e) {
+                            var file = e.target;
+                            $("<span class=\"pip\">" +
+                                "<img class=\"imageThumb\" src=\"" + e.target.result + "\" title=\"" + file.name + "\"/>" +
+                                "<br/><span class=\"remove\">Премахни</span>" +
+                                "</span>").insertAfter("#imageInput");
+                            $(".remove").click(function () {
+                                $(this).parent(".pip").remove();
+                            });
+                        });
+                        fileReader.readAsDataURL(f);
+                    }
+                });
+            } else {
+                alert("Your browser doesn't support to File API")
+            }
+        });
+    </script>
+}
+
+
+
+

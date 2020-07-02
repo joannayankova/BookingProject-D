@@ -1,0 +1,217 @@
+migrations update, 
+
+когато стратираме проекта е хубаво вече да имаме някакви данни(места), за целта понеже преди всяко стартиране 
+на проекта в стартъп.цс е казано, ако си в девелопмент стате да ти създаде нов
+дбконтекст и му извикай сийд методите ApplicationDbContextSeeder()....
+затова в този темплейт ще добавим допълнителен код който да сийдва, т.е
+да вкарва предварително някакви данни
+* в BP.Data - Seeding- AppDbContextSeeder, в който е описан списъка от всичките му сийдъри, за всеки един от тях
+се извиква метода му SeedAsync
+* ако искаме да сийднем Местата, правим клас PlacesSeeder :ISeeder, в който има същия метод, 
+к ще се стратира всеки път с приожението, който прави: ако вече имаме добавени категории в БД, 
+няма да прави нищо, т.е няма да добавяме нови
+ако няма обаче- сийдваме описаните 
+по същата логика имаме RolesSeeder(Койт сийдва администраторската роля) и 
+SettingsSeeder и към тях добавяме новия в АпДбЦСеед
+
+
+
+***** чрез Service na home stranicata da napravim listvane na kategorii ****
+- obiknoveno zapochvame s view modela, pravim si papka Home v Web.ViewModels, v neq pravim IndexViewModel,
+v nego IEnumerable ot IndexPlaceViewModel ( i tozi klas suzdavame) --- kato v nego ima propertyta: Name, Image i Description
+i Url za linka na card-vete, name i des shte se vzimat ot bazata s Automapper-a, tui kato imenata vuv viewModela i imenata
+na Place Modela v Data, koito se kazvat po sushtiq nachin
+
+ ** ako iskame bez service: v HomeControllera, ctor s ApplicationDbContext db
+sled tova v Index() pishem var viewModel... (1:52)
+*** v papka Views - Home - registritame si viewmodela 
+
+No ne e dobre da injectvame db context, a vmesto tova e po dobre da boravim i da opredelim samo spisuka koito ni trqbva
+tui kato razlikata mejdu tova da "izpluem" celiq db context i samo spisuka s repositoryta e che pri repos.
+nie opisvame oshte pri deklaraciqta(v ctora na homecontrollera) koi sa onezi modeli, s koito shte rabotq i vtoroto e che 
+vsichkiq kod minava prez obshto mqsto => mojem neshta kato IsDeletable, IsCreatedOn i tn da gi forsirame v repositorito
+ ------------
+Chrez Repository:
+
+Za celta v homecontrollera... poneje Places sa deletable entity, slagame (IDeletableEntityRepository<Place> placesRepository)
+
+ var places = this.placesRepository.All().Select(x => new IndexPlaceViewModel : oznachava
+
+vzemi mi vsichki elementi, raboti s tqh, ne gi vzimai fizicheski ot bazata, obrazuvai mi tozi viewmodel ot tqh  i gi sloji v list
+
+Selecta (s description = x.Desctription...) shte se zamesti i tova koeto napisahme shte pravi sushtoto avtomatichno
+Zaqvkata shte vzeme ot bazata samo tezi poleta, koito gi ima vuv IndexPlaceViewModel i nqma da tormozi s trafik kum bazata izlishni neshta
+
+Drugoto, koeto trqbva da se napravi e vuv public class IndexPlaceViewModel : IMapFrom<Place>  , za da znae Automappera da registrira avtomatichno
+mappinga mejdu Place i ViewMOdela. Vsichki modeli koito inmplementirat IMapFrom za tqh se generira avtomatichen mapping ot Place kum suotv. class?
+
+Pri automappera nqkoi neshta se sluchvat avtomatichno i edno ot tqh e joinvaneto na tablici, t.e ako dobavim novo Property v Place primerno REVIEWCount 
+i toi shte se seti che imame Property Post v Place i to si ima Count i toi moje direktno da go sloji
+Ne e neobhodimo da dopisvame oshte neshto i veche tozi ReviewCount mojem da izpolvame direktno vuv view-to 
+
+---------
+Chrez SERVICE:
+
+i to udoben
+
+v Services BPSErv.Data si praavim interface IPlacesService koito shte ima edin metod 
+koito shte vrushta IEnumerable<T> (ot T) shte se kazva GetAll<T>(); i shte pouchava T, kato mojem da  mu slojim
+dori edin parametur, kolko Places iskame da vzemem; Iskame da preizpolzvame metoda i na drugi mesta posle taka che
+go pravim kakto trqbva i public
+ 
+pravim i edin klas PlacesService, k go implementira
+
+Service-s rabotqt s direktno s repositorytata ako imame repository pattern, a ako nqma - diirektno s DbContext (razlikata ne e golqma)
+Ako imame repository, direktno service-a opisva kakvi neshta izpolzva np Place i slagame PlacesRepository kato pole
+
+public IEnumerable<T> GetAll<T>(int? count = null) - ako imame count vurni   go, ako ne count e null
+        {
+            IQueryable<Place> query =                               // dosega vsichko koeto pravim e edno query, koeto e ot tip IQueryable
+                this.placesRepository.All().OrderBy(x => x.Name);           // taka mojem da si pravim razlichni proverki i sortiraniq
+            if (count.HasValue)
+            {
+                query = query.Take(count.Value);
+            }
+	    return query.To<T>().ToList();  
+	}
+                        // servicite v tozi template sa nastroeni service-a da znae za automapper-a, koeto e super zashtoto vutre
+
+ mojem da kajem direktno To<T>, kakvoto i da e T, tuk dori ne rabotim s konkreten model, kakvoto kaje Controllera tova shte izpolzvame
+i e huvbavo veche service-s a vrushta List, t.e neshtata da gi e materializiral predi da vurne, a ne da vrushta Iquer., za da moje zaqvkarta
+da se sluchi tuk
+
+
+Taka poluchihme gotov SERVICE, k sled kato registrirame shte mojesm da polzvame ------>
+ Startup.cs i go registrirame //App services ==> V HomeCOntrollera
+
+var places = this.placesService.GetAll<IndexPlaceViewModel>();
+            viewModel.Places = places;   - kazvame dai mi pod formata na IndexPlaceViewModel, t.e veche vzimame places po tozi nachin
+i vseki put vseki razl. action moje da iska po razlichen nachin da mu budat mapnati places. tova zavisi ot controllera, toi opredelq viewmodela, zaradi view-to
+
+
+Hubavo e vseki  model da si ima sobstven service i vseki metod da si raboti s konkretno repository
+
+
+var viewModel = new IndexViewModel                                
+            {
+                Places =
+                    this.placesService.GetAll<IndexPlaceViewModel>(),
+            };
+            return this.View(viewModel);
+
+ili: var viewModel = new IndexViewModel();
+            var places = this.placesService.GetAll<IndexPlaceViewModel>();
+            viewModel.Places = places;
+
+            return this.View(viewModel);
+        
+
+////////edin  Action trqbva da opredeli ViewModela, da subere informaciqta za ViewModela s izvikvaneto na nqkakuv service, ako v service izvikvame
+prosto metod oshte po dobre i da izbere kakvo da pravi s User-a v sluchaq da mu vurne View-to.... tova e ot Actiona, ot tam natatuk
+si imame servici koito otzad vurshat nqkakva rabota
+Celta da izpolzvame Service-s:
+Razlikata veche e che mojem navsqkude da gi izpolzvame i moje da izvikvame tozi service da raboti s kakuvto si iskame ViewModel da raboti, kato edinstvenoto
+koeto trqbva da napravim e vuv ViewModela da nasledim IMapFrom<Place> (da kajem che se mapva)
+
+* 
+Ako iskame nqkakva custom logika za mapping  IHaveCustomMappings video-2:30h.
+
+SQL Server Profiler- za sledene na SQL zaqvkite
+
+
+
+***  Kak da napravim kato cuknem na nqkakuv link i otzad v nqkakuv controller da se lsuchva neshto:
+
+- Pravim si nov controller PlacesController : Controller , koito shte vrushta IActionResult razbira se this.View();
+ public IActionResult ByName(string name)
+        {
+            return this.View();
+        }
+    }
+-v papka Views - pravim nova papka Places i vutre shte napravim edno view koeto shte se kazva ByName -imeto na action-a
+
+
+Celta e kogato se otvori : https://localhost:44319/b/Apartament da se prashta Usera kum places controllera i ByName actiona;
+Tova shte napravim s routing v Startup.cs
+
+endpoints.MapControllerRoute("bookingPlace", "b/{name:minlength(3)}", new { controller = "Places", action = "ByName" }); 
+imeto na routa da e opisatelno i da ne se povtarq s drugite, opisvame kak shte izglejda linka. b/ sled tova vinagi shte ima name i kogato
+se otv tozi link Usera shte bude prashtan kum controller s ime Places i action ByName i toi imashe parametur Name, tozi name shte doide ot routa
+(Tova sa naricha Route Constraint (s minlengtha)- dali neshto trqbva da e bool int string za da moje da se parsne, da moje da se prashta kum nqkoi
+ot tezi tipove)
+parametura name shte idva ot tuk: name:minlength(3)
+
+
+sledvashtata stupka kato imame veche Name, da mojem da vzimame Place po ime => vlizame v IPlacesService, shte napravim edin metod, koito da vrushta T
+i shte go krustim GetByName, toi shte poluchava parametur name, shte vrushta Place ot tip T, parse-nata veche gotova, mapnata kum tozi tip
+po neinoto ime:
+         T GetByName<T>(string name);
+
+shte go implementirame -> otv. PlacesService, cukame v/u IPlaceService implement
+
+public T GetByName<T>(string name)
+        {
+            var place = this.placesRepository.All().Where(x => x.Name == name)
+                .To<T>().FirstOrDefault();
+            return place;
+        }
+
+////////nameri mi s Where element, chiito name e raven na name, koito i e podaden
+, sled tova iskam da mi go konvertirash kum T 
+sled tova da vzemesh First or Default na tova neshto;
+TOzi metod sega mojem da polzvame nacsqkude, kato si injectnem IPlacesService,
+sledovatelno shte se vuzpolzvam ot tova v PlacesConstrollera, v constructora injectvame ICategoriesService
+
+	private readonly IPlacesService placesService;
+
+        public PlacesController(IPlacesService placesService)
+        {
+            this.placesService = placesService;
+        }
+Sled tova iskame da go vzemem
+var viewModel = this.placesService.GetByName<>(name); podavame name i tova neshto shte ni e viewMOdela za view-to
+
+Kakuv shte ni e viewModela? Pitame se kakvo iskame da vizualizirame ?
+
+suzdavame edin viewModel PlaceViewModel i v nego opisvame kakvo ni trqbva ot edno Place, kato kazvam predvaritelno
+che shte mapvam ot PlaceModela ot bazata danni
+
+shte ni trqbvat edi si koi poleta i spisuk ot Review-tata
+
+
+CREATE PLACE
+
+PlacesControllera
+
+edin  action Create(),  koito shte vrushta view-to i edin koito shte se otvarq pri HttpPost, koito shte priema parametur
+PlaceCreateInputModel.
+suzdavame PlaceCreateInputModel.cs v papka ViewModels - Places , v koito shte opishem vhodnite danni neobhodimi za suzdavane
+na edno Place, sled tova suzdavame i View v papka Place i tam Create.cshtml (kakto se kazva actiona v controllera)
+
+***Layouta se izpulnqva sled view-to
+
+Sled tova otivame v startup.cs i na AddControllerswithViews slagame services.AddControllersWithViews(options =>
+            {
+                options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()); // CSRF
+            });
+tova neshto pravi pri vsqka Post zaqvka da se tursi tozi AntiforgeryToken; a puk vsqka forma blagodarenie na TagHelper-ite
+ tova neshto se
+dobavq vuv vsqka forma
+
+
+predi da dovurshim view-to, da opravim Actiona
+
+vinagi trqbva da imame model validation: 
+
+ if (!this.ModelState.IsValid)
+            {
+                return this.View(input);      vrushtame viewto i mu podavame input(tova e parametura ot....) viewto e za da moje usera da si populni
+formata, a inputa za da mooje potrebitelq da poluchi veche poletata populneni
+            }
+
+ako ne ni e valid model state, ne zapisvame nishto v bazata;
+
+
+
+
+

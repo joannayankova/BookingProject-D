@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link rel="stylesheet" href="./index.css">
+  <title>Diploma</title>
+</head>
+<body>
+
+
+
+  <div class="container place-form">
+    <h2 class="text-center">Създайте вашето място</h2>
+    <form class="row">
+      <div class="form-group col-6 p-2">
+        <label for="Name">Име</label>
+        <input type="text" class="form-control" id="Name" placeholder="Въведете име">
+      </div>
+      <div class="form-group col-6 p-2">
+        <label for="CategoryId">Категория</label>
+        <select class="form-control" id="CategoryId" placeholder="Изберете категория">
+          <option disabled selected value> -- изберете опция -- </option>
+          <option value="test1">Test1</option>
+          <option value="test2">Test2</option>
+        </select>
+      </div>
+      <div class="form-group col-6">
+        <label for="CityId">Град</label>
+        <select class="form-control" id="CityId" placeholder="Choose city">
+          <option disabled selected value=""> -- изберете опция -- </option>
+          <option value="test1">Gorna</option>
+          <option value="test2">Dolna</option>
+        </select>
+      </div>
+      <div class="form-group col-6">
+        <label for="Address">Адрес</label>
+        <input type="text" class="form-control" id="Address" placeholder="Въведете адрес">
+      </div>
+      <div class="form-group col-6">
+        <label for="PricePerNight">Цена за нощувка</label>
+        <input type="number" class="form-control" id="PricePerNight" placeholder="Въведете цена">
+      </div>
+      <div class="form-group col-6">
+        <label for="BedroomsNum">Брой стаи</label>
+        <input type="number" class="form-control" id="BedroomsNum" placeholder="Въведете брой стаи">
+      </div>
+      <div class="form-group col-6">
+        <label for="BathroomsNum">Брой бани</label>
+        <input type="number" class="form-control" id="BathroomsNum" placeholder="Въведете брой бани">
+      </div>
+      <div class="form-group col-6">
+        <label for="MaxGuest">Максимален брой гости</label>
+        <input type="number" class="form-control" id="MaxGuest" placeholder="Въведете брой гости">
+      </div>
+      <div class="col-12 row">
+        <h3 class="col-12 text-center m-3">Екстри:</h3>
+        <div class="form-group form-check col-2">
+          <input type="checkbox" class="form-check-input" id="exampleCheck1">
+          <label class="form-check-label" for="exampleCheck1">Extras1</label>
+        </div>
+        <div class="form-group form-check col-2">
+          <input type="checkbox" class="form-check-input" id="exampleCheck1">
+          <label class="form-check-label" for="exampleCheck1">Extras2</label>
+        </div>
+        <div class="form-group form-check col-2">
+          <input type="checkbox" class="form-check-input" id="exampleCheck1">
+          <label class="form-check-label" for="exampleCheck1">Extras3</label>
+        </div>
+        <div class="form-group form-check col-2">
+          <input type="checkbox" class="form-check-input" id="exampleCheck1">
+          <label class="form-check-label" for="exampleCheck1">Extras4</label>
+        </div>
+        <div class="form-group form-check col-2">
+          <input type="checkbox" class="form-check-input" id="exampleCheck1">
+          <label class="form-check-label" for="exampleCheck1">Extras5</label>
+        </div>
+        <div class="form-group form-check col-2">
+          <input type="checkbox" class="form-check-input" id="exampleCheck1">
+          <label class="form-check-label" for="exampleCheck1">Extras6</label>
+        </div>
+      </div>
+      <div class="col-12 row">
+        <h3 class="col-12 text-center m-3">Правила:</h3>
+        <div class="form-group form-check col-6 text-center">
+<	label for="Pets"></label>
+          <label class="switch">
+            <input type="checkbox" checked>
+            <span class="slider round"></span>
+          </label>
+          <span>Домашни любимци</span>
+        </div>
+        <div class="form-group form-check col-6 text-center">
+	<label for="Smokint"></label>
+          <label class="switch">
+            <input type="checkbox" checked>
+            <span class="slider round"></span>
+          </label>
+          <span>Пушене</span>
+        </div>
+      </div>
+      <div class="col-12 row">
+        <h3 class="col-12 text-center m-3">Снимки:</h3>
+        <div class="form-group form-check col-3 text-center">
+          <input type="file" id="myFile" name="filename">
+        </div>
+        <div class="form-group form-check col-3 text-center">
+          <input type="file" id="myFile" name="filename">
+        </div>
+        <div class="form-group form-check col-3 text-center">
+          <input type="file" id="myFile" name="filename">
+        </div>
+        <div class="form-group form-check col-3 text-center">
+          <input type="file" id="myFile" name="filename">
+        </div>
+        <div class="form-group form-check col-3 text-center">
+          <input type="file" id="myFile" name="filename">
+        </div>
+        <div class="form-group form-check col-3 text-center">
+          <input type="file" id="myFile" name="filename">
+        </div>
+        <div class="form-group form-check col-3 text-center">
+          <input type="file" id="myFile" name="filename">
+        </div>
+        <div class="form-group form-check col-3 text-center">
+          <input type="file" id="myFile" name="filename">
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary col-12">Създай</button>
+    </form>
+  </div>
+</body>
+</html>
+
+<div>
+        <label asp-for="Name"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div>
+        <label asp-for="Description"></label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+
+    <div>
+        <label asp-for="CategoryId"></label>
+        <select asp-for="CategoryId" asp-items="categories" class="form-control"></select>
+        <span asp-validation-for="CategoryId" class="text-danger"></span>
+    </div>
+    <hr />

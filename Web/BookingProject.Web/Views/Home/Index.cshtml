@@ -1,0 +1,19 @@
+﻿@using BookingProject.Common
+@model BookingProject.Web.ViewModels.Home.IndexViewModel
+@{
+    this.ViewData["Title"] = "stayin.bg - Първо провери при нас!";
+}    
+
+<div class="row">
+    @foreach (var category in Model.Categories)
+    {
+        <div class="col-md-3 media">
+            <div class="card" style="width: 18rem;">
+                <img class="card-img-top" src="~/images/categories/@category.ImageName" alt="@category.Name">
+                <a href="#" class="btn btn-dark">@category.Name</a>                
+            </div>
+        </div>
+    }
+</div>
+    
+
