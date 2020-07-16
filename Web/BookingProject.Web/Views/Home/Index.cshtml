@@ -2,18 +2,119 @@
 @model BookingProject.Web.ViewModels.Home.IndexViewModel
 @{
     this.ViewData["Title"] = "stayin.bg - Първо провери при нас!";
-}    
+    var cities = Model.Cities.Select(x => new SelectListItem(x.Name, x.Id.ToString()));
+    var guestsNum = Model.GuestNumbers.Select(x => new SelectListItem(x.Name, x.Id.ToString()));
+}
+<div class="search-form">
+    <div class="form-container text-center">
+        <h4 class="text-center pt-3 font-italic">Намерете вашето място</h4>
+        <div class="row container m-0">
+            <form class="col-12 row m-0 p-0" asp-controller="Places" asp-action="ShowAllPlaces" method="get" enctype="multipart/form-data">
+                <div class="col-12 col-sm-4 row">
+                    <div class="col-2 icon-container">
+                        <i class="fas fa-location-arrow"></i>
+                    </div>
+                    <div class="col-10">
+                        <select asp-for="CityId" asp-items="cities" class="form-control">
+                            <option selected value="0"> Изберете град </option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-12 col-sm-4 row">
+                    <div class="col-2 icon-container">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="col-10">
+                        <select asp-for="GuestNumber" asp-items="guestsNum" class="form-control">
+                            <option selected value="0"> Брой гости </option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-12 col-sm-4 row">
+                    <div class="col-2 icon-container">
+                        <i class="fa fa-calendar cal-start"></i>
+                    </div>
+                    <div class="col-10">
+                        <input class="form-control" asp-for="Dates" type="text" autocomplete="off" placeholder="Изберете дати" />
+                    </div>
+                </div>
+                <img class="w-100 linebreak" src="~/images/linebreak2.png" alt="">
+
+                <div class="col-12">
+                    <button class="btn btn-secondary" type="submit">
+                        Търси <i class="fas fa-search mb-2"></i>
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
 
 <div class="row">
     @foreach (var category in Model.Categories)
     {
         <div class="col-md-3 media">
             <div class="card" style="width: 18rem;">
-                <img class="card-img-top" src="~/images/categories/@category.ImageName" alt="@category.Name">
-                <a href="#" class="btn btn-dark">@category.Name</a>                
+                <a asp-controller="Places" asp-action="ShowAllPlaces" asp-route-categoryName="@category.Name" class="p-0">
+                    <img class="card-img-top" src="~/images/categories/@category.ImageName" alt="@category.Name">
+                </a>
+                    <a asp-controller="Places" asp-action="ShowAllPlaces" asp-route-categoryName="@category.Name" class="btn btn-dark">@category.Name</a>
             </div>
         </div>
     }
 </div>
-    
 
+@section scripts{
+    <script type="text/javascript">
+        $(function () {
+                $('input[name="Dates"]').daterangepicker({
+                    autoUpdateInput: false,
+                    locale: {
+                        format: 'DD/MM/YYYY',
+                        cancelLabel: 'Изчисти',
+                        applyLabel: 'Запази',
+                        fromLabel: 'От',
+                        toLabel: 'До',
+                        weekLabel: 'С',
+                        daysOfWeek: [
+                            'Нд',
+                            'Пн',
+                            'Вт',
+                            'Ср',
+                            'Чт',
+                            'Пт',
+                            'Сб'
+                        ],
+                        monthNames: [
+                            'Януари',
+                            'Февруари',
+                            'Март',
+                            'Април',
+                            'Май',
+                            'Юни',
+                            'Юли',
+                            'Август',
+                            'Септември',
+                            'Октомври',
+                            'Ноември',
+                            'Декември'
+                        ],
+                        "firstDay": 1
+                    },
+                    minDate: "@String.Format("{0:dd/MM/yyyy}", DateTime.Now)"
+                });
+
+                $('input[name="Dates"]').on('apply.daterangepicker', function(ev, picker) {
+                $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
+                 });
+
+                $('input[name="Dates"]').on('cancel.daterangepicker', function (ev, picker) {
+                $(this).val('');
+                });
+
+            });
+    </script>
+}

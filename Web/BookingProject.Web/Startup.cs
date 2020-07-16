@@ -17,6 +17,7 @@
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
@@ -59,7 +60,6 @@
 
             // Application services
             services.AddTransient<IEmailSender, NullMessageSender>();
-            services.AddTransient<ISettingsService, SettingsService>();
             services.AddTransient<IPlacesService, PlacesService>();
             services.AddTransient<ICitiesService, CitiesService>();
             services.AddTransient<ICategoriesService, CategoriesService>();
@@ -110,9 +110,8 @@
             app.UseEndpoints(
                 endpoints =>
                     {
+                        // endpoints.MapControllerRoute("bookingPlace", "b/{name:minlength(3)}", new { controller = "Categories", action = "ByName" });
                         endpoints.MapControllerRoute("areaRoute", "{area:exists}/{controller=Home}/{action=Index}/{id?}");
-                        endpoints.MapControllerRoute("bookingPlace", "b/{name:minlength(3)}", new { controller = "Places", action = "ByName" });
-                        //endpoints.MapControllerRoute("Places", "b/{name:minlength(3)}", new { controller = "Places", action = "ShowAllPlaces" });
                         endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
                         endpoints.MapRazorPages();
                     });

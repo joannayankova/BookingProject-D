@@ -7,148 +7,183 @@
 
 
 
-<div class="container">
-    <div class="row">
-        <div class="col-8">
-            <div class="slideshow-container col-8">
-                @for (int i = 0; i < Model.Images.Count; i++)
-                {
-                    <div class="mySlides fade">
-                        <div class="numbertext">@(i+1) / @Model.Images.Count</div>
-                        <img src="~/images/@Model.Images[i].Name" style="width:100%">
-                    </div>
-                }
+    <div class="container">
+        <div class="row">
+            <div class="col-8 primary-info row">
+                <div class="slideshow-container col-12 pr-0">
+                    @for (int i = 0; i < Model.Images.Count; i++)
+                    {
+                        <div class="mySlides fade">
+                            <div class="numbertext">@(i+1) / @Model.Images.Count</div>
+                            <img src="~/images/@Model.Images[i].Name" style="width:100%">
+                        </div>
+                    }
 
-                <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
-                <a class="next" onclick="plusSlides(1)">&#10095;</a>
+                    <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+                    <a class="next" onclick="plusSlides(1)">&#10095;</a>
 
+                </div>
+                <br>
+
+                <div class="col-12 text-center">
+                    @for (int i = 1; i <= Model.Images.Count; i++)
+                    {
+                        <span class="dot" onclick="currentSlide(@i)"></span>
+                    }
+                </div>
             </div>
-            <br>
-
-            <div style="text-align:center">
-                @for (int i = 1; i <= Model.Images.Count; i++)
-                {
-                    <span class="dot" onclick="currentSlide(@i)"></span>
-                }
+            <div class="col-4 row">
+                <div class="col-12">
+                    <form asp-controller="Reservations" asp-action="DetailReservation" method="get" enctype="multipart/form-data">
+                        <div class="row text-left primary-info">
+                            <div class="col-12 h3 text-center">Резервация</div>
+                            <div class="col-12 text-center">
+                                <input class="form-control mb-3" asp-for="Dates" type="text" autocomplete="off" placeholder="Изберете дати" />
+                            </div>
+                            <input type="hidden" asp-for="PlaceId" value="@Model.Id" />
+                            <div class="col-12 mb-2 ml-5">
+                                <i class="fas fa-tag custom-green"></i>
+                                <span class="place-info-title">Цена: </span>
+                                <span class="place-info"> @Model.PriceByNight </span>
+                                <span class="place-info-title">лв/нощувка</span>
+                            </div>
+                            <div class="col-12 mb-2 ml-5">
+                                <i class="fas fa-user-friends"></i>
+                                <span class="place-info-title">Максимум гости: </span>
+                                <span class="place-info">@Model.MaxGuest</span>
+                            </div>
+                            <div class="col-12 mb-2 ml-5">
+                                <i class="fas fa-person-booth"></i>
+                                <span class="place-info-title">Брой спални стаи: </span>
+                                <span class="place-info">@Model.BedroomsNum</span>
+                            </div>
+                            <div class="col-12 mb-2 ml-5">
+                                <i class="fas fa-bath"></i>
+                                <span class="place-info-title">Брой бани: </span>
+                                <span class="place-info">@Model.BathroomsNum</span>
+                            </div>
+                            <div class="col-12 mb-2 ml-5">
+                                <i class="fas fa-bed"></i>
+                                <span class="place-info-title">Брой легла: </span>
+                                <span class="place-info">@Model.BedsNum</span>
+                            </div>
+                            <div class="col-12 text-center">
+                                <input class="btn btn-secondary" id="reservation-btn" type="submit" value="Резервирай" />
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
-        <div class="col-4">
-            <form asp-controller="Reservations" asp-action="DetailReservation" method="post" enctype="multipart/form-data">
-                <div class="row text-center">
-                    <div class="col-12 h3">Изберете дати:</div>
-                    <div class="col-12 text-center">
-                        <input asp-for="Dates" type="text" autocomplete="off" />
-                    </div>
-                    <input type="hidden" asp-for="PlaceId"  value="@Model.Id" />
-                    <div class="col-12 text-center">
-                        <input class="btn btn-secondary" type="submit" value="Резервирай" />
-                    </div>
+        <div class="row primary-info">
+            <div class="col-8 row">
+                <div class="col-12 text-center">
+                    <span class="place-name">@Model.Name</span>
                 </div>
-            </form>
-        </div>
-    </div>
 
-    <div class="row">
-        <div class="col-12 col-lg-8 row pr-0">
-
-            <div class="col-12 secondary-info">
-                <div class="row mt-2 text-left">
-                    <div class="col-6 col-md-4">
-                        <span class="place-second-info">@Model.Name</span>
-                    </div>
+                <img class="w-100 linebreak" src="~/images/linebreak2.png" alt="">
+                <div class="col-6">
+                    <i class="fas fa-home text-success" style="font-size: 1rem"></i>
+                    <span class="place-info-title">Категория:</span>
+                    <span class="place-info">@Model.CategoryName</span>
                 </div>
-                <div class="col-6 col-md-4">
-                    <span class="place-second-info">Категория: @Model.CategoryName</span>
-                </div>
-                <div class="col-6 col-md-4">
+                <div class="col-6">
                     <i class="fas fa-map-marker-alt text-primary" style="font-size: 1rem"></i>
-                    <span class="place-second-info">Населено място: @Model.CityName</span>
+                    <span class="place-info-title">Населено място:</span>
+                    <span class="place-info">@Model.CityName <span class="place-info-title">(Област @Model.City.Region.Name)</span></span>
                 </div>
-                <div class="col-6 col-md-4">
-                    <span class="place-second-info">Адрес: @Model.Address</span>
+                <div class="col-6">
+                    <i class="fas fa-location-arrow text-primary" style="font-size: 0.9rem"></i>
+                    <span class="place-info-title">Адрес:</span>
+                    <span class="place-info">@Model.Address</span>
                 </div>
-                <div class="col-6 col-md-4">
+                <div class="col-6">
+                    <span class="place-info-title">Рейтинг:</span>
                     @for (int i = 0; i < Model.Rating; i++)
                     {
-                        <span class="fa fa-star"></span>
+                        <span class="fa fa-star" style="color:orange"></span>
                     }
                     @for (int i = Model.Rating; i < 5; i++)
                     {
                         <span class="fa fa-star-o"></span>
                     }
-                    <span class="place-second-info">Рейтинг: @Model.Rating</span>(@Model.ReviewsCount)
+                    (@Model.ReviewsCount)
+                    @*<span class="place-info">@Model.Rating</span>(@Model.ReviewsCount)*@
                 </div>
-                <div class="col-6 col-md-4">
-                    <i class="fas fa-tag custom-green"></i>
-                    <span class="place-second-info">Цена: @Model.PriceByNight лв/нощувка</span>
+            </div>
+            <div class="container col-4 row text-center">
+                <div class="col-12">
+                    <span class="place-info-title">Собственик:</span>
                 </div>
-                <div class="col-6 col-md-4">
-                    <i class="fas fa-user-friends"></i>
-                    <span class="place-second-info">Максимум гости: @Model.MaxGuest</span>
+                <div class="col-12">
+                    <i class="far fa-user"></i><span class="place-info"> @Model.User.Email</span>
                 </div>
-                <div class="col-6 col-md-4">
-                    <span class="place-second-info">Брой спални стаи: @Model.BedroomsNum</span>
-                </div>
-                <div class="col-6 col-md-4">
-                    <span class="place-second-info">Брой бани: @Model.BathroomsNum</span>
-                </div>
-                <div class="col-6 col-md-4">
-                    <span class="place-second-info">Брой легла: @Model.BedsNum</span>
+                <div class="col-12">
+                    <i class="fas fa-phone text-primary"></i><span class="place-info-title"> @Model.User.PhoneNumber</span>
                 </div>
             </div>
         </div>
+
+        <img class="w-100 linebreak" src="~/images/linebreak2.png" alt="">
+
         <div class="row">
-            <div class="col-12">
-                Описание: @Model.ShortDescription
-            </div>
-            <div class="col-12">
-                <div class="col-6 col-md-4">
+            @if (Model.Description.Length > 0)
+            {
+                <div class="col-12 h5 mb-2">
+                    Описание:
+                </div>
+                <div class="col-12">
+                    @Model.Description
+                </div>
+
+                <img class="w-100 linebreak" src="~/images/linebreak2.png" alt="">
+            }
+
+            @if (Model.PlaceExtras.Count > 0)
+            {
+                <div class="col-12 h5 mb-2">
                     Екстри:
                 </div>
-                <ul>
+                <div class="col-12 row">
                     @foreach (var pExtra in Model.PlaceExtras)
                     {
-                        <li>
-                            @pExtra.Extra.Name
-                        </li>
+                        <div class="col-4">
+                            <i class="fas fa-check font-italic text-success"></i><span class="place-info"> @pExtra.Extra.Name</span>
+                        </div>
                     }
-                </ul>
-                <div class="col-6 col-md-4">
-                    Правила за наемане:
                 </div>
-                @if (@Model.Pets == true)
-                {
-                    <div class="col-12">
-                        <ul>
-                            <li><label asp-for="Pets"><i class="fas fa-dog fa-2x"></i>Мястото предлага опция за домашни любимци.</label></li>
-                        </ul>
-                    </div>
-                }
-                else
-                {
-                    <div class="col-12">
-                        <ul>
-                            <li><label asp-for="Pets"><i class="fas fa-ban fa-2x"></i>Мястото не предлага опция за домашни любимци.</label></li>
-                        </ul>
-                    </div>
-                }
-                @if (Model.Smoking == true)
-                {
-                    <div class="col-12">
-                        <ul>
-                            <li><label asp-for="Smoking"><i class="fas fa-smoking fa-2x"></i>Мястото предлага опция за тютюнопушене.</label></li>
-                        </ul>
-                    </div>
-                }
-                else
-                {
-                    <div class="col-12">
-                        <ul>
-                            <li><label asp-for="Smoking"><i class="fas fa-smoking-ban fa-2x"></i> Мястото не предлага опция за тютюнопушене.</label></li>
-                        </ul>
-                    </div>
-                }
+
+                <img class="w-100 linebreak" src="~/images/linebreak2.png" alt="">
+            }
+
+            <div class="col-12 h5 mb-3">
+                Правила за наемане:
             </div>
+            @if (@Model.Pets == true)
+            {
+                <div class="col-12">
+                    <label asp-for="Pets"><i class="fas fa-dog fa-2x"></i>Мястото предлага опция за домашни любимци.</label>
+                </div>
+            }
+            else
+            {
+                <div class="col-12">
+                    <label asp-for="Pets"><img src="~/images/no-pets.png" width="36" height="36"> Мястото не предлага опция за домашни любимци.</label>
+                </div>
+            }
+            @if (Model.Smoking == true)
+            {
+                <div class="col-12">
+                    <label asp-for="Smoking"><i class="fas fa-smoking fa-2x"></i>Мястото предлага опция за тютюнопушене.</label>
+                </div>
+            }
+            else
+            {
+                <div class="col-12">
+                    <label asp-for="Smoking"><img src="~/images/no-smoking.svg" width="36" height="36"> Мястото не предлага опция за тютюнопушене.</label>
+                </div>
+            }
+        </div>
         </div>
         <div class="row">
             <div class="col-12 col-lg-8 row pr-0">
@@ -161,17 +196,13 @@
             </div>
         </div>
     </div>
-</div>
 
-<div>
+<div class="container">
     <form asp-controller="Reviews" asp-action="Create" method="post" id="AddReviewForm" style="display: none">
         <input type="hidden" name="PlaceId" value="@this.Model.Id" />
-        <div>
-            <label for="Comment"></label>
-            <textarea name="Comment" id="Comment" class="form-control" placeholder="Напишете коментар..."></textarea>
-        </div>
+
         <div class="rating-box">
-            <h1>Rating System</h1>
+            <h4>Оценка:</h4>
             <div class="ratings">
                 <span class="fa fa-star-o"></span>
                 <span class="fa fa-star-o"></span>
@@ -181,8 +212,11 @@
             </div>
             <input type="hidden" name="Rating" id="rating-value" />
         </div>
-        <div>
-            <input type="submit" class="btn btn-primary" value="Add review" />
+        <div class="mt-3 mb-3">
+            <textarea name="Comment" id="Comment" class="form-control" placeholder="Напишете коментар..."></textarea>
+        </div>
+        <div class="text-center mb-5">
+            <input type="submit" class="btn btn-primary" value="Добавете мнение" />
         </div>
     </form>
 </div>
@@ -226,6 +260,33 @@
 
 @section scripts{
     <script type="text/javascript">
+        var slideIndex = 1;
+        showSlides(slideIndex);
+
+        function plusSlides(n) {
+            showSlides(slideIndex += n);
+        }
+
+        function currentSlide(n) {
+            showSlides(slideIndex = n);
+        }
+
+        function showSlides(n) {
+            var i;
+            var slides = document.getElementsByClassName("mySlides");
+            var dots = document.getElementsByClassName("dot");
+            if (n > slides.length) { slideIndex = 1 }
+            if (n < 1) { slideIndex = slides.length }
+            for (i = 0; i < slides.length; i++) {
+                slides[i].style.display = "none";
+            }
+            for (i = 0; i < dots.length; i++) {
+                dots[i].className = dots[i].className.replace(" active", "");
+            }
+            slides[slideIndex - 1].style.display = "block";
+            dots[slideIndex - 1].className += " active";
+        }
+
             function showAddReviewForm() {
             $("#AddReviewForm").show();
             $([document.documentElement, document.body]).animate({
@@ -233,18 +294,47 @@
             }, 1000);
             }
 
-            $(function() {
+        $(function () {
+                var arr = @Html.Raw(Model.ReservedDays)
 
                 $('input[name="Dates"]').daterangepicker({
                     autoUpdateInput: false,
                     locale: {
-                        cancelLabel: 'Clear'
+                        format: 'DD/MM/YYYY',
+                        cancelLabel: 'Изчисти',
+                        applyLabel: 'Запази',
+                        fromLabel: 'От',
+                        toLabel: 'До',
+                        weekLabel: 'С',
+                        daysOfWeek: [
+                            'Нд',
+                            'Пн',
+                            'Вт',
+                            'Ср',
+                            'Чт',
+                            'Пт',
+                            'Сб'
+                        ],
+                        monthNames: [
+                            'Януари',
+                            'Февруари',
+                            'Март',
+                            'Април',
+                            'Май',
+                            'Юни',
+                            'Юли',
+                            'Август',
+                            'Септември',
+                            'Октомври',
+                            'Ноември',
+                            'Декември'
+                        ],
+                        "firstDay": 1
                     },
-                    minDate: "@String.Format("{0:M/d/yyyy}", DateTime.Now)",
+                    minDate: "@String.Format("{0:dd/MM/yyyy}", DateTime.Now)",
                     isInvalidDate: function (date) {
-                        if (jQuery.inArray(date.format('M/D/YYYY'), jQuery.parseJSON(@Model.ReservedDays))) {
-                            return true;
-                        }
+                        var formatted = date.format('DD/MM/YYYY');
+                        return arr.indexOf(formatted) > -1;
                     }
                 });
 
@@ -252,10 +342,17 @@
                 $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
                  });
 
-                $('input[name="Dates"]').on('cancel.daterangepicker', function(ev, picker) {
+                $('input[name="Dates"]').on('cancel.daterangepicker', function (ev, picker) {
                 $(this).val('');
                 });
 
             });
     </script>
 }
+
+<style>
+    .card {
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+</style>

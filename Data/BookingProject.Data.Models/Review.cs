@@ -16,12 +16,16 @@
 
         public virtual ApplicationUser User { get; set; }
 
+        [Required]
         public int PlaceId { get; set; }
 
         public virtual Place Place { get; set; }
 
-        public int? Rating { get; set; }
+        [Required]
+        public int Rating { get; set; }
 
+        [Required]
+        [StringLength(500)]
         public string Comment { get; set; }
     }
 }

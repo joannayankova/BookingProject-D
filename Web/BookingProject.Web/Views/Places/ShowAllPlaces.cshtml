@@ -2,68 +2,123 @@
 @model BookingProject.Web.ViewModels.Places.ListPlaceViewModel
 @{
     this.ViewData["Title"] = $"Welcome to {GlobalConstants.SystemName}!";
+    var cities = Model.Cities.Select(x => new SelectListItem(x.Name, x.Id.ToString()));
+    var guestsNum = Model.GuestNumbers.Select(x => new SelectListItem(x.Name, x.Id.ToString()));
+    var sortOprtions = new List<SelectListItem>();
+    sortOprtions.Add(new SelectListItem { Text = "Цена възходяща", Value = "asc" });
+    sortOprtions.Add(new SelectListItem { Text = "Цена низходяща", Value = "desc" });
 }
 
-<div class="text-center">
-    <h1 class="display-4">@this.ViewData["Title"]</h1>
-</div>
-
-
 <div class="container mt-3">
+    @*FILTERS START*@
     <div class="row">
-        @foreach (var place in Model.CardsPlaces)
+        <div class="row container m-0">
+            <form class="col-12 row m-0 p-0" asp-controller="Places" asp-action="ShowAllPlaces" method="get" enctype="multipart/form-data">
+                <div class="col-4 row">
+                    <div class="col-2 icon-container">
+                        <i class="fas fa-location-arrow"></i>
+                    </div>
+                    <div class="col-10">
+                        <select asp-for="CityId" asp-items="cities" class="form-control">
+                            <option selected value="0"> Изберете град </option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-4 row">
+                    <div class="col-2 icon-container">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="col-10">
+                        <select asp-for="GuestNumber" asp-items="guestsNum" class="form-control">
+                            <option selected value="0"> Брой гости </option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-4 row">
+                    <div class="col-2 icon-container">
+                        <i class="fa fa-calendar cal-start"></i>
+                    </div>
+                    <div class="col-10">
+                        <input class="form-control" asp-for="Dates" type="text" autocomplete="off" placeholder="Изберете дати" />
+                    </div>
+                </div>
+                    
+                <div class="col-12 mt-2 text-center row">
+                    <div class="col-3"></div>
+                    <div class="col-3 text-center">
+                        <select asp-for="SortBy" asp-items="sortOprtions" class="form-control sort-select">
+                            <option selected value="id"> Сортирай по ... </option>
+                        </select>
+                    </div>
+                    <div class="col-3">
+                        <button class="btn btn-secondary" type="submit">
+                            Търси <i class="fas fa-search mb-2"></i>
+                        </button>
+                    </div>
+                    <div class="col-3"></div>
+                </div>
+            </form>
+        </div>
+
+        @*FILTERS END*@
+
+        @if (Model.Places.Count() == 0)
         {
-            <div class="place-wrapper col-6 mb-4">
+            <div class="text-center">
+                <h4 class="col-12 mt-3">Не намерихме резултати, отговарящи на вашето търсене</h4>
+            </div>
+        }
+        @foreach (var place in Model.Places)
+        {
+            <div class="place-wrapper col-6 mt-3 mb-4">
                 <div class="media-body">
                     <div class="place-card p-0">
                         <div class="place-price">
                             <i class="fas fa-tag custom-green"></i><span class="h5">@place.PriceByNight лв</span>/нощувка
                         </div>
                         <div class="place-fav">
-                            <i class="far fa-heart"></i>
                         </div>
-                        <a asp-controller="Places" asp-action="GetById" asp-route-id="@place.Id"><img class="place-img" src="~/images/backgroundA.jpg" alt="error"></a>
+                        <a asp-controller="Places" asp-action="GetById" asp-route-id="@place.Id"><img class="place-img" src="~/images/@place.Images[0].Name" alt="error"></a>
                         <a asp-controller="Places" asp-action="GetById" asp-route-id="@place.Id">
                             <div class="place-info">
                                 <div class="row">
-                                    @*<div class="col-7 text-left pr-0">
-            <span class="place-year">@place.Name</span>
-        </div>
-        <div class="col-7 text-left pr-0">
-            <span class="place-year">@place.CategoryName</span>
-        </div>*@
                                     <div class="col-7 text-left pr-0">
                                         @place.Name <span class="place-year">@place.CategoryName</span>
                                     </div>
-                                    <div class="col-5 text-right">                                        
-                                        @for (int i = 0; i < place.Rating; i++)
-                                        {
-                                            <span class="fa fa-star"></span>
-                                        }
-                                        @for (int i = place.Rating; i < 5; i++)
-                                        {
-                                            <span class="fa fa-star-o"></span>
-                                        }
-                                        <span>@place.Rating</span>(@place.ReviewsCount)
+                                    <div class="col-5 text-right row p-0">
+                                        <div class="col-12">
+                                            @for (int i = 0; i < place.Rating; i++)
+                                            {
+                                                <span class="fa fa-star"></span>
+                                            }
+                                            @for (int i = place.Rating; i < 5; i++)
+                                            {
+                                                <span class="fa fa-star-o"></span>
+                                            }
+                                        </div>
+                                        <div class="col-12 pl-0">
+                                            <div class="place-city">
+                                                <i class="fas fa-map-marker-alt text-primary" style="font-size: 1rem"></i> @place.CityName
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="col-6 text-left place-city">
-                                        <i class="fas fa-map-marker-alt text-primary" style="font-size: 1rem"></i>@place.CityName
-                                    </div>                                    
                                 </div>
                                 <div class="row mt-2 text-left">
                                     <div class="col-6 pr-0">
-                                        <i class="fas fa-user-friends"></i><span class="place-second-info">@place.MaxGuest </span>
+                                        <i class="fas fa-user-friends"></i><span class="place-second-info-title"> Места: </span><span class="place-second-info"> @place.MaxGuest </span>
                                     </div>
                                     <div class="col-6 pr-0">
-                                        <i class="fas fa-bed"></i><span class="place-second-info"> @place.BedsNum</span>
+                                        <i class="fas fa-bed"></i><span class="place-second-info-title"> Брой легла: </span><span class="place-second-info"> @place.BedsNum</span>
                                     </div>
                                 </div>
                                 <div class="row mt-1 text-left">
                                     <div class="col-6 pr-0">
-                                        <i class="fas fa-bath"></i><span class="place-second-info"> @place.BathroomsNum</span>
+                                        <i class="fas fa-bath"></i><span class="place-second-info-title"> Брой бани: </span><span class="place-second-info"> @place.BathroomsNum</span>
                                     </div>
                                     <div class="col-6 pr-0">
-                                        <i class="fas fa-question"></i><span class="place-second-info"> ???</span>
+                                        <i class="fas fa-address-book"></i><span class="place-second-info-title"> Предишни наематели: </span><span class="place-second-info"> @place.Reservations.Count </span>
                                     </div>
                                 </div>
                             </div>
@@ -75,4 +130,107 @@
     </div>
 </div>
 
+<nav>
+        <ul class="pagination justify-content-center">
+            @if (this.Model.CurrentPage == 1)
+            {
+    <li class="page-item disabled">
+        <a class="page-link" href="#">Previous</a>
+    </li>
+     }
+                else
+                {
+    <li class="page-item">
+        <a class="page-link"
+           asp-route="cardsList"
+           asp-route-name="@this.Model.Id"
+           asp-route-page="@(this.Model.CurrentPage - 1)">Previous</a>
+    </li>
+    }
 
+            @for (int i = 1; i <= this.Model.PagesCount; i++)
+            {
+                var active = i == this.Model.CurrentPage ? "active" : string.Empty;
+    <li class="page-item @active">
+        <a class="page-link"
+           asp-route="cardsList"
+           asp-route-name="@this.Model.Id"
+           asp-route-page="@i">@i</a>
+    </li>
+    }
+
+            @if (this.Model.CurrentPage == this.Model.PagesCount)
+            {
+    <li class="page-item disabled">
+        <a class="page-link" href="#">Next</a>
+    </li>
+     }
+    else
+    {
+    <li class="page-item">
+        <a class="page-link"
+           asp-route="cardsList"
+           asp-route-name="@this.Model.Id"
+           asp-route-page="@(this.Model.CurrentPage + 1)">Next</a>
+    </li>
+    }
+        </ul>
+    </nav>
+
+@section scripts{
+    <script type="text/javascript">
+        $(function () {
+                $('input[name="Dates"]').daterangepicker({
+                    autoUpdateInput: false,
+                    locale: {
+                        format: 'DD/MM/YYYY',
+                        cancelLabel: 'Изчисти',
+                        applyLabel: 'Запази',
+                        fromLabel: 'От',
+                        toLabel: 'До',
+                        weekLabel: 'С',
+                        daysOfWeek: [
+                            'Нд',
+                            'Пн',
+                            'Вт',
+                            'Ср',
+                            'Чт',
+                            'Пт',
+                            'Сб'
+                        ],
+                        monthNames: [
+                            'Януари',
+                            'Февруари',
+                            'Март',
+                            'Април',
+                            'Май',
+                            'Юни',
+                            'Юли',
+                            'Август',
+                            'Септември',
+                            'Октомври',
+                            'Ноември',
+                            'Декември'
+                        ],
+                        "firstDay": 1
+                    },
+                    minDate: "@String.Format("{0:dd/MM/yyyy}", DateTime.Now)"
+                });
+
+                $('input[name="Dates"]').on('apply.daterangepicker', function(ev, picker) {
+                $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
+                 });
+
+                $('input[name="Dates"]').on('cancel.daterangepicker', function (ev, picker) {
+                $(this).val('');
+                });
+
+            });
+    </script>
+}
+
+<style>
+    .sort-select {
+        max-width: 200px;
+    }
+</style>

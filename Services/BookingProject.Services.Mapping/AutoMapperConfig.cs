@@ -7,6 +7,7 @@
 
     using AutoMapper;
     using AutoMapper.Configuration;
+    using BookingProject.Data.Models;
 
     public static class AutoMapperConfig
     {
@@ -30,6 +31,7 @@
                 "ReflectionProfile",
                 configuration =>
                 {
+                    configuration.CreateMap<Place, Place>();
                     // IMapFrom<>
                     foreach (var map in GetFromMaps(types))
                     {

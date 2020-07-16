@@ -16,18 +16,24 @@
 
         public virtual ApplicationUser User { get; set; }
 
+        [Required]
         public int PlaceId { get; set; }
 
         public virtual Place Place { get; set; }
 
+        [Required]
         public DateTime StartDate { get; set; }
 
+        [Required]
         public DateTime EndDate { get; set; }
 
-        public int PricePerNight { get; set; }
+        [Required]
+        public double PricePerNight { get; set; }
 
-        public int TotalPrice { get; set; }
+        [Required]
+        public double TotalPrice { get; set; }
 
+        [Required]
         public int NumNights { get; set; }
 
         public bool Active { get; set; }

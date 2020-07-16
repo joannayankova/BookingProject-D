@@ -1,0 +1,245 @@
+﻿@using BookingProject.Common
+@model BookingProject.Web.ViewModels.Places.ListPlaceViewModel
+
+<div class="container mt-3">
+
+    <div class="row">
+        @if (Model.Places.Count() == 0)
+        {
+            <div class="col-12 text-center">
+                <h3 class="display-4 text-center">Все още няма места</h3>
+            </div>
+        }
+        @foreach (var place in Model.Places)
+        {
+            <div class="place-wrapper col-6 mt-3 mb-4">
+                <div class="media-body">
+                    <div class="choose">
+                        <a role="button" asp-controller="Places" asp-action="GetById" asp-route-id="@place.Id">
+                            <div class="p-0 place-view">
+                                <div class="view-wrapper">
+                                    <div class="title">
+                                        <i class="far fa-eye"></i> Преглед
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                        <a role="button" asp-controller="Places" asp-action="Delete" asp-route-id="@place.Id">
+                            <div class="p-0 place-delete">
+                                <div class="delete-wrapper">
+                                    <div class="title">
+                                        <i class="fas fa-trash-alt"></i> Премахни
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+
+                        <div class="place-card p-0">
+                            <div class="place-price">
+                                <i class="fas fa-tag custom-green"></i><span class="h5">@place.PriceByNight лв</span>/нощувка
+                            </div>
+                            <div class="place-fav">
+                            </div>
+                            <a asp-controller="Places" asp-action="GetById" asp-route-id="@place.Id"><img class="place-img" src="~/images/@place.Images[0].Name" alt="error"></a>
+                            <a asp-controller="Places" asp-action="GetById" asp-route-id="@place.Id">
+                                <div class="place-info">
+                                    <div class="row">
+                                        <div class="col-7 text-left pr-0">
+                                            @place.Name <span class="place-year">@place.CategoryName</span>
+                                        </div>
+                                        <div class="col-5 text-right">
+                                            @for (int i = 0; i < place.Rating; i++)
+                                            {
+                                                <span class="fa fa-star"></span>
+                                            }
+                                            @for (int i = place.Rating; i < 5; i++)
+                                            {
+                                                <span class="fa fa-star-o"></span>
+                                            }
+                                        </div>
+                                        <div class="col-6 text-left place-city">
+                                            <i class="fas fa-map-marker-alt text-primary" style="font-size: 1rem"></i>@place.CityName
+                                        </div>
+                                        <div class="col-6 text-right place-city">
+                                            @place.ReviewsCount наемателя
+                                        </div>
+                                    </div>
+                                    <div class="row mt-2 text-left">
+                                        <div class="col-6 pr-0">
+                                            <i class="fas fa-user-friends"></i><span class="place-second-info">@place.MaxGuest </span>
+                                        </div>
+                                        <div class="col-6 pr-0">
+                                            <i class="fas fa-bed"></i><span class="place-second-info"> @place.BedsNum</span>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-1 text-left">
+                                        <div class="col-6 pr-0">
+                                            <i class="fas fa-bath"></i><span class="place-second-info"> @place.BathroomsNum</span>
+                                        </div>
+                                        <div class="col-6 pr-0">
+                                            <i class="fas fa-question"></i><span class="place-second-info"> ???</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+        $(function () {
+                $('input[name="Dates"]').daterangepicker({
+                    autoUpdateInput: false,
+                    locale: {
+                        format: 'DD/MM/YYYY',
+                        cancelLabel: 'Изчисти',
+                        applyLabel: 'Запази',
+                        fromLabel: 'От',
+                        toLabel: 'До',
+                        weekLabel: 'С',
+                        daysOfWeek: [
+                            'Нд',
+                            'Пн',
+                            'Вт',
+                            'Ср',
+                            'Чт',
+                            'Пт',
+                            'Сб'
+                        ],
+                        monthNames: [
+                            'Януари',
+                            'Февруари',
+                            'Март',
+                            'Април',
+                            'Май',
+                            'Юни',
+                            'Юли',
+                            'Август',
+                            'Септември',
+                            'Октомври',
+                            'Ноември',
+                            'Декември'
+                        ],
+                        "firstDay": 1
+                    },
+                    minDate: "@String.Format("{0:M/d/yyyy}", DateTime.Now)"
+                });
+
+                $('input[name="Dates"]').on('apply.daterangepicker', function(ev, picker) {
+                $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
+                 });
+
+                $('input[name="Dates"]').on('cancel.daterangepicker', function (ev, picker) {
+                $(this).val('');
+                });
+
+            });
+    </script>
+}
+
+<style>
+    .choose {
+        position: relative;
+        border-radius: 8px;
+        height: 100%;
+        transition: all 0.5s ease;
+        cursor: pointer;
+    }
+
+        .choose .title {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            transition: all 0.3s ease;
+            opacity: 0;
+            color: white;
+            text-shadow: 2px 2px 8px black;
+            text-align: center;
+            font-size: 1.1rem;
+            transition: all 0.5s ease;
+        }
+
+        .choose .place-view {
+            display: block;
+            width: 50%;
+            height: 100%;
+            position: absolute;
+            z-index: 100;
+            transition: all 0.5s ease;
+            background-color: rgba(0, 160, 0, 0.3);
+            opacity: 0;
+            border-top-left-radius: 8px;
+            border-bottom-left-radius: 8px;
+        }
+
+        .choose .place-delete {
+            width: 50%;
+            height: 100%;
+            position: absolute;
+            z-index: 100;
+            right: 0;
+            transition: all 0.5s ease;
+            background-color: rgba(255, 0, 0, 0.3);
+            opacity: 0;
+        }
+
+        .choose:hover .place-view {
+            opacity: 1;
+            border-top-left-radius: 8px;
+            border-bottom-left-radius: 8px;
+        }
+
+            .choose:hover .place-view:hover .view-wrapper {
+                background-color: rgba(0, 160, 0, 0.45);
+            }
+
+        .choose:hover .place-delete {
+            opacity: 1;
+            border-top-right-radius: 8px;
+            border-bottom-right-radius: 8px;
+        }
+
+            .choose:hover .place-delete:hover .delete-wrapper {
+                background-color: rgba(255, 0, 0, 0.45);
+            }
+
+        .choose:hover .place-reservations {
+            opacity: 1;
+        }
+
+            .choose:hover .place-reservations:hover .reservations-wrapper {
+                background-color: rgba(0, 47, 255, 0.45);
+            }
+
+        .choose:hover .title {
+            opacity: 1;
+            transition: all 0.5s ease;
+        }
+
+    .place-view :hover > .place-view {
+        background-color: red !important;
+    }
+
+    .view-wrapper {
+        height: 100%;
+        width: 100%;
+        transition: all 0.5s ease;
+        border-top-left-radius: 8px;
+        border-bottom-left-radius: 8px;
+    }
+
+    .delete-wrapper {
+        height: 100%;
+        width: 100%;
+        transition: all 0.5s ease;
+        border-top-right-radius: 8px;
+        border-bottom-right-radius: 8px;
+    }
+</style>

@@ -15,10 +15,12 @@
 
         public string ImageUrl { get; set; }
 
-        // public int CurrentPage { get; set; }
+        public int CurrentPage { get; set; }
 
-        // public int PagesCount { get; set; }
+        public int PagesCount { get; set; }
 
-        public IEnumerable<PlaceViewModel> Places { get; set; }
+        // public IEnumerable<PlaceViewModel> Places { get; set; }
+
+        public IEnumerable<CardPlaceViewModel> CardPlaces { get; set; }
     }
 }

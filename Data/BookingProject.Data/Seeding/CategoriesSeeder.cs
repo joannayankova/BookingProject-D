@@ -16,7 +16,7 @@
                 return;
             }
 
-            var categories = new List<string> { "Къщи/Вили", "Апартаменти", "Стаи", "Бунгала" };
+            var categories = new List<string> { "Къщи", "Апартаменти", "Стаи", "Бунгала" };
 
             foreach (var category in categories)
             {

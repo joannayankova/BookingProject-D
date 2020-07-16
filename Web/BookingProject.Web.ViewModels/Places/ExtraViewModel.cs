@@ -3,7 +3,7 @@
     using BookingProject.Data.Models;
     using BookingProject.Services.Mapping;
 
-    public class ExtraViewModel : IMapFrom<Extra>/*, IMapTo<Extra>*/
+    public class ExtraViewModel : IMapFrom<Extra>, IMapTo<Extra>
     {
         public int Id { get; set; }
 

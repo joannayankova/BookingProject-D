@@ -27,26 +27,35 @@
 
         public virtual ApplicationUser User { get; set; }
 
+        [Required]
         public int CategoryId { get; set; }
 
         public virtual Category Category { get; set; }
 
+        [Required]
         public int CityId { get; set; }
 
         public virtual City City { get; set; }
 
+        [StringLength(500)]
+        [Required]
         public string Address { get; set; }
 
         public string Description { get; set; }
 
+        [Required]
         public int PriceByNight { get; set; }
 
+        [Required]
         public int BedroomsNum { get; set; }
 
+        [Required]
         public int BathroomsNum { get; set; }
 
+        [Required]
         public int BedsNum { get; set; }
 
+        [Required]
         public int MaxGuest { get; set; }
 
         public bool Pets { get; set; }

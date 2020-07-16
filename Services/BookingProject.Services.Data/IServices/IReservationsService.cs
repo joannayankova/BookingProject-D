@@ -7,11 +7,18 @@
 
     public interface IReservationsService
     {
-        //IEnumerable<T> GetAll<T>(int? count = null);
+        IEnumerable<T> GetAll<T>();
+
+        IEnumerable<T> GetAllByUser<T>(string userId);
+
+        IEnumerable<T> GetAllByPlace<T>(int placeId);
 
         Task<int> CreateReservationAsync(
             int placeId,
             string userId,
-            string dates);
+            string dates,
+            double pricePerNight,
+            double totalPrice,
+            int numNights);
     }
 }

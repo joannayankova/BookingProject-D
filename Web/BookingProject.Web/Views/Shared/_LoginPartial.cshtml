@@ -4,33 +4,53 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 
+@{ 
+    var user = await this.UserManager.GetUserAsync(this.User);
+}
+
 <ul class="navbar-nav">
    @if (this.SignInManager.IsSignedIn(this.User))
    {
-    <li class="add-button">
-        <a class="btn btn-secondary" role="button" aria-pressed="true" asp-area="" asp-controller="Places" asp-action="Create">
-            <i class="fa fa-plus-circle" aria-hidden="true"></i> Добави място
-        </a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">
-            <i class="fa fa-user fa-fw"></i> Моят профил
-        </a>        
-    </li>
-        if (this.User.IsInRole(GlobalConstants.AdministratorRoleName))
+        if (user.IsAdmin)
         {
         <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="Administration" asp-controller="Dashboard" asp-action="Index" title="Admin">Admin</a>
+            <a class="nav-link text-dark" asp-controller="Places" asp-action="Administration">Администрация</a>
         </li> 
         }
+        <li>
+            <div class="btn-group">
+                <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fa fa-user fa-fw"></i> Моят профил
+                </button>
+                <div class="dropdown-menu">
+                    <a class="btn btn-secondary w-100" role="button" aria-pressed="true" asp-area="" asp-controller="Reservations" asp-action="UserReservations">
+                        <i class="fas fa-book" aria-hidden="true"></i> Резервации
+                    </a>
+                    <a class="btn btn-secondary w-100" role="button" aria-pressed="true" asp-area="" asp-controller="Places" asp-action="Create">
+                        <i class="fa fa-plus-circle" aria-hidden="true"></i> Добави място
+                    </a>
+                    <a class="btn btn-secondary w-100" role="button" aria-pressed="true" asp-area="" asp-controller="Places" asp-action="ShowUserPlaces">
+                        <i class="fas fa-home" aria-hidden="true"></i> Моите места
+                    </a>
+                    <a class="btn btn-secondary w-100" role="button" aria-pressed="true" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">
+                        <i class="fas fa-user-cog" aria-hidden="true"></i> Настройки
+                    </a>
+                </div>
+            </div>
+        </li>
         <li class="nav-item">
             <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@(this.Url.Action("Index", "Home", new { area = string.Empty }))">
-                <button type="submit" class="nav-link btn btn-link text-dark"><i class="fa fa-sign-out"></i> Logout</button>
+                <button type="submit" class="nav-link btn btn-link text-dark"><i class="fa fa-sign-out"></i> Изход</button>
             </form>
         </li> 
     }
     else
     {
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">
+                <i class="fa fa-plus-circle" aria-hidden="true"></i> Добави помещение
+            </a>
+        </li>
         <li class="nav-item">
             <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Регистрация</a>
         </li>

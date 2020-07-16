@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
     using System.Net;
     using System.Text.RegularExpressions;
 
@@ -16,33 +17,17 @@
 
         public string CategoryName { get; set; }
 
-        public string UserEmail { get; set; }
+        public ApplicationUser User { get; set; }
 
-        public string UserPhoneNumber { get; set; }
+        public virtual City City { get; set; }
+
+        public int CityId { get; set; }
 
         public string CityName { get; set; }
 
         public string Address { get; set; }
 
         public string Description { get; set; }
-
-        public string ShortDescription
-        {
-            get
-            {
-                if (this.Description.Length > 0)
-                {
-                    var description = WebUtility.HtmlDecode(Regex.Replace(this.Description, @"<[^>]+>", string.Empty));
-                    return description.Length > 100
-                            ? description.Substring(0, 100) + "..."
-                            : description;
-                }
-                else
-                {
-                    return string.Empty;
-                }
-            }
-        }
 
         public string PriceByNight { get; set; }
 
@@ -69,6 +54,7 @@
         // Reservation data
         public int PlaceId { get; set; }
 
+        [Required]
         public string Dates { get; set; }
 
         // Review data

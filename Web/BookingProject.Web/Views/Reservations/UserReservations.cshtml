@@ -1,0 +1,220 @@
+﻿@model BookingProject.Web.ViewModels.Reservations.ListReservationViewModel
+@{
+    ViewData["Title"] = "UserReservations";
+    var culture = new System.Globalization.CultureInfo("bg-BG");
+    List<BookingProject.Web.ViewModels.Reservations.ReservationViewModel> upcoming = new List<BookingProject.Web.ViewModels.Reservations.ReservationViewModel>();
+    List<BookingProject.Web.ViewModels.Reservations.ReservationViewModel> previous = new List<BookingProject.Web.ViewModels.Reservations.ReservationViewModel>();
+    foreach (var res in Model.Reservations)
+    {
+        if (res.StartDate > DateTime.Now)
+        {
+            upcoming.Add(res);
+        } else
+        {
+            previous.Add(res);
+        }
+    }
+}
+
+    <div class="container">
+        <h1 class="text-center">Вашите резервации</h1>
+        @if (upcoming.Count == 0 && previous.Count == 0)
+        {
+            <h2 class="text-center">Нямате предстоящи резервации</h2>
+            <a asp-action="ShowAllPlaces" asp-controller="Places">
+                <h3 class="text-center text-secondary font-italic">Разгледайте нашите предложения тук</h3>
+            </a>
+        }
+        @if (upcoming.Count > 0)
+        {
+            <h3>Предстоящи:</h3>
+            @foreach (var res in Model.Reservations)
+            {
+                <div class="col-12 text-center mt-4">
+                    <div class="reservation row">
+                        <div class="col-12 col-lg-6 row">
+                            <img class="place-img col-12 col-md-6 p-0"
+                                 src="~/images/@res.Place.Images[0].Name"
+                                 alt="" />
+                            <div class="col-12 col-md-6">
+                                <h4>
+                                    @res.Place.Name
+                                </h4>
+                                <hr class="m-1" />
+                                @res.Place.User.UserName
+                                <br />
+                                <i class="fas fa-mobile-alt"></i> @res.Place.User.PhoneNumber
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 row text-left">
+                            <div class="col-12 col-md-6 col-lg-8">
+                                <div class="col-12 p-1">
+                                    <div class="date-box text-center p-1">
+                                        <span class="font-weight-bold h4">
+                                            @res.StartDate.Day
+                                        </span>
+                                        <br class="p-0 m-0" />
+                                        @res.StartDate.ToString("MMM", culture)
+                                    </div>
+                                    <div class="date-info">
+                                        Настаняване - @res.StartDate.ToString("dddd", culture)
+                                        <br class="p-0 m-0" />
+                                        след 15:00 часа
+                                    </div>
+                                </div>
+                                <div class="col-12 p-1">
+                                    <div class="date-box text-center p-1">
+                                        <span class="font-weight-bold h4">
+                                            @res.EndDate.Day
+                                        </span>
+                                        <br class="p-0 m-0" />
+                                        @res.EndDate.ToString("MMM", culture)
+                                    </div>
+                                    <div class="date-info">
+                                        Освобождаване - @res.EndDate.ToString("dddd", culture)
+                                        <br class="p-0 m-0" />
+                                        до 12:00 часа
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6 col-lg-4 text-center price">
+                                <p class="m-1">Платено:</p>
+                                <h5>@res.TotalPrice лв</h5>
+                                <hr class="m-1" />
+
+                                <p class="m-1">Продължителност:</p>
+                                <h5>@res.NumNights дни</h5>
+                                <hr class="m-1" />
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            }
+        }
+        @if (previous.Count > 0)
+        {
+            <h3>Отминали:</h3>
+            @foreach (var res in Model.Reservations)
+            {
+                <div class="col-12 text-center mt-4">
+                    <div class="reservation row">
+                        <div class="col-12 col-lg-6 row">
+                            <img class="place-img col-12 col-md-6 p-0"
+                                 src="~/images/@res.Place.Images[0].Name"
+                                 alt="" />
+                            <div class="col-12 col-md-6">
+                                <h4>
+                                    @res.Place.Name
+                                </h4>
+                                <h5>
+                                    @res.Place.CategoryName
+                                </h5>
+                                <hr class="m-1" />
+                                @res.Place.User.UserName
+                                <br />
+                                <i class="fas fa-mobile-alt"></i> @res.Place.User.PhoneNumber
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 row text-left">
+                            <div class="col-12 col-md-6 col-lg-8">
+                                <div class="col-12 p-1">
+                                    <div class="date-box text-center p-1">
+                                        <span class="font-weight-bold h4">
+                                            @res.StartDate.Day
+                                        </span>
+                                        <br class="p-0 m-0" />
+                                        @res.StartDate.ToString("MMM", culture)
+                                    </div>
+                                    <div class="date-info">
+                                        Настаняване - @res.StartDate.ToString("dddd", culture)
+                                        <br class="p-0 m-0" />
+                                        след 15:00 часа
+                                    </div>
+                                </div>
+                                <div class="col-12 p-1">
+                                    <div class="date-box text-center p-1">
+                                        <span class="font-weight-bold h4">
+                                            @res.EndDate.Day
+                                        </span>
+                                        <br class="p-0 m-0" />
+                                        @res.EndDate.ToString("MMM", culture)
+                                    </div>
+                                    <div class="date-info">
+                                        Освобождаване - @res.EndDate.ToString("dddd", culture)
+                                        <br class="p-0 m-0" />
+                                        до 12:00 часа
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6 col-lg-4 text-center price">
+                                <p class="m-1">Платено:</p>
+                                <h5>@res.TotalPrice лв</h5>
+                                <hr class="m-1" />
+
+                                <p class="m-1">Продължителност:</p>
+                                <h5>@res.NumNights дни</h5>
+                                <hr class="m-1" />
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            }
+        }
+    </div>
+
+<style>
+    .reservation {
+        border-radius: 8px;
+        background: linear-gradient(to right, #57a6ff, #bbd3ff, white);
+    }
+
+    .date-box {
+        display: inline-block;
+        height: 60px;
+        width: 60px;
+        border-radius: 10px;
+        background-color: #eee;
+        font-size: 1rem;
+    }
+
+    .date-info {
+        display: inline-block;
+        margin-left: 10px;
+        font-size: 0.9rem;
+    }
+
+    .place-img {
+        width: 100%;
+        height: 9em;
+        object-fit: cover;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+
+    .owner-img {
+        height: 30px;
+        width: 30px;
+        border-radius: 50%;
+    }
+
+    .price {
+        font-size: 1rem;
+        padding: 0;
+    }
+
+    .price .fa-times {
+        font-size: 1.6rem;
+    }
+
+    .price .fa-star {
+        font-size: 1.6rem;
+        color: #f80;
+    }
+
+    .price .pointer {
+        cursor: pointer;
+    }
+ 
+</style>

@@ -3,13 +3,13 @@
     var categories = Model.Categories.Select(x => new SelectListItem(x.Name, x.Id.ToString()));
     var cities = Model.Cities.Select(x => new SelectListItem(x.Name, x.Id.ToString())); }
 
-<h1>@this.ViewData["Title"]</h1>
+<h3>@this.ViewData["Title"]</h3>
 
 
 <form method="post" asp-action="Create" enctype="multipart/form-data" class="row" id="uploadForm">
     <div class="form-group col-6">
         <label asp-for="Name">Име</label>
-        <input asp-for="Name" type="text" class="form-control" placeholder="Въведете име" value="Test" />
+        <input asp-for="Name" type="text" class="form-control" placeholder="Въведете име"/>
         <span asp-validation-for="Name" class="text-danger"></span>
     </div>
     <div class="form-group col-6">
@@ -28,45 +28,45 @@
     </div>
     <div class="form-group col-6" style="height: 2em">
         <label asp-for="Address">Адрес</label>
-        <textarea asp-for="Address" type="text" class="form-control" placeholder="Въведете адрес" value="Test"></textarea>
+        <textarea asp-for="Address" type="text" class="form-control" placeholder="Въведете адрес"></textarea>
         <span asp-validation-for="Address" class="text-danger"></span>
     </div>
     <div class="form-group col-6" style="height: 2em">
         <label asp-for="Description">Описание на помещението</label>
-        <textarea asp-for="Description" type="text" class="form-control" placeholder="Въведете oписание" value="Test"></textarea>
+        <textarea asp-for="Description" type="text" class="form-control" placeholder="Въведете oписание"></textarea>
         <span asp-validation-for="Description" class="text-danger"></span>
     </div>
     <div class="form-group col-6">
         <label asp-for="PriceByNight">Цена за нощувка</label>
-        <input asp-for="PriceByNight" type="number" class="form-control" id="PricePerNight" value=5 placeholder="Въведете цена за нощувка">
+        <input asp-for="PriceByNight" type="number" class="form-control" id="PricePerNight" placeholder="Въведете цена за нощувка">
         <span asp-validation-for="PriceByNight" class="text-danger"></span>
     </div>
     <div class="form-group col-6">
         <label asp-for="BedroomsNum">Брой спални стаи</label>
-        <input asp-for="BedroomsNum" type="number" class="form-control" id="BedroomsNum" value=5 placeholder="Въведете брой спални стаи">
+        <input asp-for="BedroomsNum" type="number" class="form-control" id="BedroomsNum" placeholder="Въведете брой спални стаи">
         <span asp-validation-for="BedroomsNum" class="text-danger"></span>
     </div>
     <div class="form-group col-6">
         <label asp-for="BedsNum">Брой легла</label>
-        <input asp-for="BedsNum" type="number" class="form-control" id="BedsNum" value=5 placeholder="Въведете общ брой легла">
+        <input asp-for="BedsNum" type="number" class="form-control" id="BedsNum" placeholder="Въведете общ брой легла">
         <span asp-validation-for="BedsNum" class="text-danger"></span>
     </div>
 
     <div class="form-group col-6">
         <label asp-for="BathroomsNum">Брой бани</label>
-        <input asp-for="BathroomsNum" type="number" class="form-control" id="BathroomsNum" value=5 placeholder="Въведете брой бани">
+        <input asp-for="BathroomsNum" type="number" class="form-control" id="BathroomsNum" placeholder="Въведете брой бани">
         <span asp-validation-for="BathroomsNum" class="text-danger"></span>
     </div>
     <div class="form-group col-6">
         <label asp-for="MaxGuest">Максимум гости</label>
-        <input asp-for="MaxGuest" type="number" class="form-control" id="MaxGuest" value=5 placeholder="Въведете максимален брой гости/вкл. деца/">
+        <input asp-for="MaxGuest" type="number" class="form-control" id="MaxGuest" placeholder="Въведете максимален брой гости/вкл. деца/">
         <span asp-validation-for="MaxGuest" class="text-danger"></span>
     </div>
     <div class="col-12 row">
         <h3 class="col-12 text-center m-3">Екстри:</h3>
         @for (int i = 0; i < Model.Extras.Count; i++)
         {
-<div class="form-group form-check col-2">
+<div class="form-group form-check col-3">
     <input type="checkbox" asp-for="@Model.Extras[i].IsSelected" />
     <label asp-for="@Model.Extras[i].IsSelected">@Model.Extras[i].Name</label>
     <input type="hidden" asp-for="@Model.Extras[i].Id" />
@@ -92,15 +92,20 @@
     </div>
     <div class="col-12">
         <h3 class="col-md-4 text-center m-3">Качване на снимки:</h3>
-        <div class="col-md-3" id='filecontainer'>
+        <div class="col-12 row" id='filecontainer'>
             <span class="btn btn-default btn-file col-12 text-center m-3">
                 <i class="far fa-file-image fa-2x"></i><label for="imageInput"> Избери файлове</label>
             </span>
-            <input asp-for="Images" type="file" class="custom-file-input" id="imageInput" multiple />            
+            <input asp-for="Images" type="file" class="custom-file-input" id="imageInput" multiple accept="image/png,image/jpg,image/jpeg"/>
+            <span asp-validation-for="Images" class="text-danger"></span>
         </div>
     </div>
-    <div class="col-12">
-        <input type="submit" value="Създай" class="btn btn-secondary col-4" style="margin-left: 27rem">
+    <div class="col-12 row">
+        <div class="col-4"></div>
+        <div class="col-4">
+            <input type="submit" value="Създай" class="btn btn-secondary col-12 mt-4">
+        </div>
+        <div class="col-4"></div>
     </div>
 </form>
 
@@ -132,12 +137,14 @@
                         var fileReader = new FileReader();
                         fileReader.onload = (function (e) {
                             var file = e.target;
-                            $("<span class=\"pip\">" +
+                            $("<div class=\"col-4 text-center imgBox\">" +
+                                "<span class=\"pip\">" +
                                 "<img class=\"imageThumb\" src=\"" + e.target.result + "\" title=\"" + file.name + "\"/>" +
                                 "<br/><span class=\"remove\">Премахни</span>" +
-                                "</span>").insertAfter("#imageInput");
+                                "</span>" +
+                                "</div>").insertAfter("#imageInput");
                             $(".remove").click(function () {
-                                $(this).parent(".pip").remove();
+                                $(this).parent(".pip").parent(".imgBox").remove();
                             });
                         });
                         fileReader.readAsDataURL(f);

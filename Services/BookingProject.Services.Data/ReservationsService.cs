@@ -6,10 +6,11 @@
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
+
     using BookingProject.Data.Common.Repositories;
     using BookingProject.Data.Models;
     using BookingProject.Services.Data.IServices;
-    
+    using BookingProject.Services.Mapping;
 
     public class ReservationsService : IReservationsService
     {
@@ -23,22 +24,37 @@
             this.placesService = placesService;
         }
 
-        //public IEnumerable<T> GetAll<T>(int? count = null)
-        //{
-        //    IQueryable<Reservation> query =
-        //        this.reservationsRepository.All().OrderBy(x => x.Id);
-        //    if (count.HasValue)
-        //    {
-        //        query = query.Take(count.Value);
-        //    }
+        public IEnumerable<T> GetAll<T>()
+        {
+            IQueryable<Reservation> query =
+                this.reservationsRepository.All().OrderBy(r => r.Id);
 
-        //    //return query.To<T>().ToList();
-        //}
+            return query.To<T>().ToList();
+        }
+
+        public IEnumerable<T> GetAllByUser<T>(string userId)
+        {
+            IQueryable<Reservation> query =
+                this.reservationsRepository.All().Where(r => r.UserId == userId).OrderBy(r => r.Id);
+
+            return query.To<T>().ToList();
+        }
+
+        public IEnumerable<T> GetAllByPlace<T>(int placeId)
+        {
+            IQueryable<Reservation> query =
+                this.reservationsRepository.All().Where(r => r.PlaceId == placeId).OrderBy(r => r.Id);
+
+            return query.To<T>().ToList();
+        }
 
         public async Task<int> CreateReservationAsync(
             int placeId,
             string userId,
-            string dates)
+            string dates,
+            double pricePerNight,
+            double totalPrice,
+            int numNights)
         {
             string[] splitDates = dates.Split(" - ");
 
@@ -48,6 +64,9 @@
                 UserId = userId,
                 StartDate = DateTime.Parse(splitDates[0]),
                 EndDate = DateTime.Parse(splitDates[1]),
+                PricePerNight = pricePerNight,
+                TotalPrice = totalPrice,
+                NumNights = numNights,
             };
 
             await this.reservationsRepository.AddAsync(reservation);

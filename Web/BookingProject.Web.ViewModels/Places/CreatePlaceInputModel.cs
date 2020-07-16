@@ -10,6 +10,7 @@
     using BookingProject.Services.Mapping;
     using BookingProject.Web.ViewModels.Image;
     using Microsoft.AspNetCore.Http;
+    
 
     public class CreatePlaceInputModel : IMapTo<Place>
     {
@@ -30,6 +31,7 @@
         [StringLength(50)]
         public string Address { get; set; }
 
+        [Required(ErrorMessage = "Полето 'Описание' е задължително.")]
         [StringLength(500)]
         public string Description { get; set; }
 
@@ -71,8 +73,7 @@
 
         public List<Image> ImagesList { get; set; }
 
-        public IFormFile Image { get; set; }
-
+        [Required(ErrorMessage = "Моля, добавете минимум една снимка.")]
         public List<IFormFile> Images { get; set; }
     }
 }

@@ -85,6 +85,9 @@ namespace BookingProject.Data.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("IsAdmin")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -452,8 +455,8 @@ namespace BookingProject.Data.Migrations
                     b.Property<int>("PlaceId")
                         .HasColumnType("int");
 
-                    b.Property<int>("PricePerNight")
-                        .HasColumnType("int");
+                    b.Property<double>("PricePerNight")
+                        .HasColumnType("float");
 
                     b.Property<bool>("Reviewed")
                         .HasColumnType("bit");
@@ -461,8 +464,8 @@ namespace BookingProject.Data.Migrations
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("TotalPrice")
-                        .HasColumnType("int");
+                    b.Property<double>("TotalPrice")
+                        .HasColumnType("float");
 
                     b.Property<string>("UserId")
                         .IsRequired()

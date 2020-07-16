@@ -7,6 +7,6 @@
     {
         public PlaceViewModel PlaceViewModel { get; set; }
 
-        public CreateReservationViewModel CreateReservationViewModel { get; set; }
+        public CreateReservationInputModel CreateReservationInputModel { get; set; }
     }
 }
